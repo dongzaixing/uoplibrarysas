@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset=utf-8>
+		<title>Project_SAS</title>
+		<link rel="stylesheet" type="text/css" href="style.css?v=1.1">
+	</head>
+	<body>
+		<div id="glFullscreen">
+				<canvas id="main"></canvas>
+		</div>
+		<div id="dat">
+	
+		</div>
+		<div id="logo">
+			<a>UoP LIBRARY <br>SITUATION AWARENESS <br>AVAILABLE MAP</a>
+		</div>
+		<div id="info">
+				
+				
+				<a>PC AVAILABLE:<br></a>
+				<a id="info_pcAva"> -- </a>
+				<a> / 367 Ava. </a><br><br><br>
+				<a>POPULATION:</a><br>
+				<a id="info_population"> 1024 </a><br><br><br>
+				<a>RECOMMEND:</a><br>
+				<a>TO AREA A</a>
+				
+				<div id="feedback"></div>
+		</div>
+
+		<div id="link">
+			<a href="#">ABOUT LIBRARY</a>
+		</div>
+
+		<div id="action">
+			<button onclick="cameraRSF()" id="cameraRBtn">Stop Camera 360°</button>
+		</div>
+
+		<div id="guide">
+			<div id="guide_text">
+				<a style="font-size:14px;"># AVALIABLE PC DEVICES</a><br><br>
+				<a>Click Stop Camera 360° to stop animation.</a><br><br>
+				<a>Use mouse wheel or enlarge gesture to zoom in and focus on inside.</a><br><br>
+				<div class="green_screen"></div><a>Green screen: PC Avaliable</a><br><br>
+				<div class="red_screen"></div><a>Red screen: PC Unavaliable</a><br><br>
+			</div>
+			<div id="guide_close" onclick="closeGuide()"><div class="close"> </div></div>
+			<div id="guide_line"> </div>
+		</div>
+
+		<script src="js/jq.min.js"></script>
+		<script src="js/Detector.js"></script>
+		<script src="js/three.js"></script>
+		<script src="js/controls/TrackballControls.js"></script>
+		<script src="js/controls/OrbitControls.js"></script>
+		<script src="js/loaders/MTLLoader.js"></script>
+		<script src="js/libs/dat.gui.min.js"></script>
+
+		<script src="js/loaders/LoaderSupport.js"></script>
+		<script src="js/loaders/OBJLoader.js"></script>
+		<script src="js/loaders/OBJLoader2.js"></script>
+		<script src="js/postprocessing/OutlinePass.js"></script>
+		<script src="js/main.js"></script>></script>
+</html>
