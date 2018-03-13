@@ -96,7 +96,8 @@
 					var directionalLight1 = new THREE.DirectionalLight( 0xafcdd3 );
 					var directionalLight2 = new THREE.DirectionalLight( 0xafcdd3 );
 					var directionalLight3 = new THREE.DirectionalLight( 0xafcdd3);
-                    var directionalLight4 = new THREE.DirectionalLight( 0xefefef);
+					var directionalLight4 = new THREE.DirectionalLight( 0xefefef);
+					//var pointLight1 = new THREE.PointLight( 0xf3f3f3 );
                     //var directionalLight5 = new THREE.DirectionalLight( 0xefefef);
 					directionalLight1.position.set( -400, 300, -400 );
 					directionalLight2.position.set( 5000, 10000, 5000 );
@@ -106,7 +107,8 @@
 					this.scene.add( directionalLight1 );
 					this.scene.add( directionalLight2 );
 					this.scene.add( directionalLight3 );
-                    this.scene.add( directionalLight4 );
+					this.scene.add( directionalLight4 );
+					//this.scene.add( pointLight1 );
                     //this.scene.add( directionalLight5 );
 
 					//set sence background
@@ -122,12 +124,12 @@
 
 				
 				
-				//Objloader
+				//IMPORT OBJ FILE
 				OBJLoader2Example.prototype.initContent = function () {
 					var modelName1 = 'libraryMainBuilding';
 					var modelName2 = 'librarySeat';
 					var modelName3 = 'libraryNearBy';
-					//this._reportProgress( { detail: { text: 'Loading: ' + modelName } } );
+					var modelName4 = 'libraryInner';
 					var scope = this;
 					var objLoader = new THREE.OBJLoader2();
 
@@ -135,43 +137,42 @@
 						var local = new THREE.Object3D();
 						scope.scene.add( local );
 						local.add( event.detail.loaderRootNode );
-                        local.position.set( 500, 0, 2400 );
-						//scope.scene.add( event.detail.loaderRootNode );
-						
-						//console.log(local.position)
-						
-						//console.log( 'Loading complete: ' + event.detail.modelName );
-						//scope._reportProgress( { detail: { text: '' } } );
+						local.position.set( 500, 0, 2400 );
 					};
+
+					//Load Main Library Object
 					var onLoadMtl_Main = function ( materials ) {
 						objLoader.setModelName( modelName1 );
 						objLoader.setMaterials( materials );
 						objLoader.setUseIndices( true );
 						objLoader.setDisregardNormals( false );
-						//objLoader.getLogger().setDebug( true );
-						//materials.opacity = 0;
+						console.log(objLoader)
 						
 						objLoader.load( 'Project_SAS_Main.obj', callbackOnLoad, null, null, null, false );
 					};
+					//Load Seat Object
 					var onLoadMtl_Seat = function ( materials ) {
 						objLoader.setModelName( modelName2 );
-						objLoader.setMaterials( materials );
+						//objLoader.setMaterials( materials );
 						objLoader.setUseIndices( true );
 						objLoader.setDisregardNormals( false );
-
-						
 						objLoader.load( 'Project_SAS_Seat.obj', callbackOnLoad, null, null, null, false );
 					};
+					//Load Nearby Building
 					var onLoadMtl_NB = function ( materials ) {
 						objLoader.setModelName( modelName3 );
-						objLoader.setMaterials( materials );
+						//objLoader.setMaterials( materials );
 						objLoader.setUseIndices( true );
 						objLoader.setDisregardNormals( false );
 						objLoader.load( 'Project_SAS_NB.obj', callbackOnLoad, null, null, null, false );
 					};
+
+					//Loader Controller
+					//Load Main Building Material and callback main building loadup
 					objLoader.loadMtl( './Project_SAS_Main.mtl', 'Project_SAS_Main.mtl', null, onLoadMtl_Main );
+					//Load seat and nearby building
 					onLoadMtl_Seat();
-                    onLoadMtl_NB();
+					onLoadMtl_NB();
                     
                     var onLoadRoad = function(){
                         var material = new THREE.LineBasicMaterial({
@@ -207,9 +208,7 @@
                         scope.scene.add(line3);
                     }
 
-                    onLoadRoad();
-
-
+					onLoadRoad();
 
 				};
 				
@@ -312,10 +311,18 @@
 						var pcIndex = pcName.indexOf(seatPosi[count].name)
                         var theStatus = pcStatus[pcIndex].state;
 						if(theStatus == 2){
-							var material = new THREE.MeshBasicMaterial( { color: 0xe82d43} );
+							var material = new THREE.MeshBasicMaterial({ 
+								color: 0xe82d43,
+								specular: 0xff0000,
+								shininess: 1,
+							});
 						}
 						if(theStatus == 1 || theStatus == 0){
-							var material = new THREE.MeshBasicMaterial( { color: 0x59ecaf} );
+							var material = new THREE.MeshBasicMaterial({ 
+								color: 0x59ecaf,
+								specular: 0xff0000,
+								shininess: 1,
+							});
 						}
 						
 						var cube = new THREE.Mesh( geometry, material );
@@ -368,9 +375,20 @@
                             height: 1,
                             curveSegments: 100,
                             bevelEnabled: false
-                        } );
-                    
-                        var textMaterial = new THREE.MeshPhongMaterial( { color: 0x26deff } );
+						} );
+						
+						if(t > 40){
+							var textMaterial = new THREE.MeshPhongMaterial( { color: 0x59ecaf } );
+						}
+
+						if(t >= 20 && t <= 40){
+							var textMaterial = new THREE.MeshPhongMaterial( { color: 0xff8b3e } );
+						}
+
+						if(t < 20){
+							var textMaterial = new THREE.MeshPhongMaterial( { color: 0xff3e3e } );
+						}
+                        
                     
                         var textMesh = new THREE.Mesh( textGeo, textMaterial );
                         var textMesh_intro = new THREE.Mesh( textGeo_intro, textMaterial );
@@ -503,29 +521,33 @@
 					app.camera.position.x = Math.cos( timer ) * 3600;
 					app.camera.position.z = Math.sin( timer ) * 3600;				
 				}else{
+					//closer and transparant
+					var tranOpTarget_Main = app.scene.getObjectById(22);
+					var tranOpTargetChildren_Main = tranOpTarget_Main.children;
+					//console.log(tranOpTarget_Inner)
 					//z < 800 || z > -800
-					if(app.camera.position.x < 5400 && app.camera.position.x > -5400 && app.camera.position.z < 5400 && app.camera.position.z > -5400 && app.camera.position.y < 5400 && app.camera.position.y > -5400){
-						var tranOpTarget = app.scene.getObjectById(22);
-                        var tranOpTargetChildren = tranOpTarget.children;
-						//console.log(tranOpTargetChildren)
-						for(i=0;i<tranOpTargetChildren.length;i++){
-							tranOpTarget.children[i].material.opacity = 0.05;
+					if(app.camera.position.x < 5400 
+						&& app.camera.position.x > -5400 
+						&& app.camera.position.z < 5400 
+						&& app.camera.position.z > -5400 
+						&& app.camera.position.y < 5400 
+						&& app.camera.position.y > -5400){
+						//tranOpTarget_Main.children.material.opacity = 0.05;
+						for(i=0;i<tranOpTargetChildren_Main.length;i++){
+							tranOpTarget_Main.children[i].material.opacity = 0.05;
 						}
-						//tranOpTarget.children[0].opacity = 0.1;
-						//console.log(tranOpTarget.children);
+
 					}else{
-						
-						var tranOpTarget = app.scene.getObjectById(22);
-						var tranOpTargetChildren = tranOpTarget.children
-						for(i=0;i<tranOpTargetChildren.length;i++){
-							tranOpTarget.children[i].material.opacity = 0.8;
+
+						for(i=0;i<tranOpTargetChildren_Main.length;i++){
+							tranOpTarget_Main.children[i].material.opacity = 0.8;
 						}
+
 					}
 					//do nothing...
 				}
 				
-				
-				//console.log(app.camera.position.z);
+
 
 				app.render();
 				
