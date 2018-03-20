@@ -1,6 +1,11 @@
 @font-face {
-    font-family: Lulo;
+    font-family: barlow;
     src: url(./asset/fonts/barlow.ttf);
+}
+
+@font-face {
+    font-family: barlowbold;
+    src: url(./asset/fonts/barlowbold.ttf);
 }
 
 /* Animation Statement */
@@ -24,20 +29,27 @@
     100% {opacity: 1}
 }
 
+@keyframes flash{
+    0%   {opacity: 1}
+    50%   {opacity: 0}
+    100% {opacity: 1}
+}
+
+
 
   
   
 
 body {
     /*background-color: #000;*/
-    font-family: Lulo, PingFang SC, Sans-Serif, Helvetica, Arial;
+    font-family: barlow, PingFang SC, Sans-Serif, Helvetica, Arial;
     color: #fff;
     margin: 0 0 0 0;
     padding: 0 0 0 0;
     border: none;
     cursor: default;
     background-image: linear-gradient(#12171b,#182028, #12171b);
-
+    -webkit-appearance: none;
 
     /*no selection*/
     -webkit-touch-callout: none;
@@ -47,11 +59,15 @@ body {
     user-select: none;
 }
 
+::-webkit-scrollbar { 
+    display: none; 
+}
+
 button{
-    font-family: Lulo, PingFang SC, Sans-Serif, Helvetica, Arial;
+    font-family: barlow, PingFang SC, Sans-Serif, Helvetica, Arial;
     height:40px;
     background-color:rgba(34, 88, 102, 0.2);
-    border: 2px solid #225866;
+    border: 2px solid #40e2ff;
     color:#fff;
     cursor: pointer;
     width:130px;
@@ -61,10 +77,18 @@ button{
 
 button:hover{
     background-color:rgba(34, 88, 102, 0.6);
-    border: 2px solid #40e2ff;
+    border: 2px solid #18e1ff;
 }
 
 button:focus {
+    outline:0;
+}
+
+select{
+    border-radius: 0px;
+}
+
+select:focus{
     outline:0;
 }
 
@@ -78,6 +102,37 @@ a {
     letter-spacing:2px;
 }
 
+
+.top_bg {
+    position: absolute;
+    top: 0px;
+    height: 120px;
+    width: 100%;
+    z-index: 99;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.6), rgba(0,0,0,0));
+}
+
+#loading_screen{
+    position:fixed;
+    height:100%;
+    width:100%;
+    background-image: linear-gradient(#12171b,#182028, #12171b);
+    display:block;
+    z-index:999;
+}
+
+#loading_screen_text{
+    text-align: center;
+    margin-top:24%;
+}
+
+#loading_ani{
+    animation-name: flash;
+    animation-duration: 1.4s;
+    animation-fill-mode: forwards;
+    
+}
+
 #logo {
     
     position: absolute;
@@ -89,6 +144,53 @@ a {
     display:block;
     line-height: 22px;
     animation: infoL2R 0.8s;
+}
+
+#find_seat{
+    position: absolute;
+    top: 32px;
+    right: 190px;
+    z-index: 100;
+    background-color: rgba(34, 88, 102, 0.2);
+    /*timer*/
+    transition: all 240ms ease-in-out;
+}
+
+#find_seat select{
+    font-family:barlow;
+    width: 200px;
+    height: 30px;
+    background-color: rgba(0,0,0,0.5);
+    color: #40e2ff;
+    border: 2px solid #40e2ff;
+
+}
+
+#find_seat a{
+    font-size:12px;
+}
+
+#find_seat option{
+    font-family:barlow; 
+}
+
+#searchBtn{
+
+    border-radius: 2px;
+    color: #40e2ff;
+    width: 100px;
+    height: 30px;
+    margin-left: 10px;
+    -webkit-appearance: none;
+    outline:none;
+    /*timer*/
+    transition: all 240ms ease-in-out;
+}
+
+#searchBtn:hover{
+    color: #000;
+    background-color: #40e2ff;
+    border: 2px solid #40e2ff;
 }
 
 #info {
@@ -238,6 +340,7 @@ a {
   #guide_line{
       position: absolute;
       left:-2px;
+      top:260px;
       width:440px;
       height:0px;
       border:2px solid #40e2ff;
