@@ -3,7 +3,7 @@
 	<head>
 		<meta charset=utf-8>
 		<title>Project_SAS</title>
-		<link rel="stylesheet" type="text/css" href="style.css?v=1.1">
+		<link rel="stylesheet" type="text/css" href="style.css?v=1.5">
 	</head>
 	<body>
 		<div id="loading_screen">
@@ -16,12 +16,17 @@
 		<div id="dat">
 	
 		</div>
+
+		<div id="alert">
+			<a id="alert_text"> </a>
+		</div>
 		<div class="top_bg">
 			<div id="logo">
-				<a>UoP LIBRARY <br>SITUATION AWARENESS <br>AVAILABLE MAP</a>
+				<a style="font-family:barlowbold;">UoP LIBRARY </a> <a>| 3D AVAILABLE MAP</a>
 			</div>
 
 			<div id="find_seat">
+				<a style="font-family:barlowbold;">GROUP SEAT FINDER: </a>
 				<select id="find_seat_value">
 					<option value="2">SEATS FOR 2</option>
 					<option value="3">SEATS FOR 3</option>
@@ -49,7 +54,7 @@
 				<a> / 367 Ava. </a><br><br><br>
 				<a>POPULATION:</a><br>
 				<a id="info_population"> 1024 </a><br><br><br>
-				<a>RECOMMEND:</a><br>
+				<a onclick="advance_mylocation()">RECOMMEND:</a><br>
 				<a>TO AREA A</a>
 				
 				<div id="feedback"></div>
@@ -61,13 +66,43 @@
 
 		<div id="guide">
 			<div id="guide_text">
-				<a style="font-size:16px;font-family:barlowbold;"># AVALIABLE PC DEVICES</a><br><br>
-				<a>Click Stop Camera 360° to stop animation, and use mouse wheel or enlarge gesture to zoom in and focus on inside.</a><br><br>
-				<div class="green_screen"></div><a>Green screen: PC Avaliable</a><br><br>
-				<div class="red_screen"></div><a>Red screen: PC Unavaliable</a><br><br>
+				<a style="font-size:16px;font-family:barlowbold;">READ ME</a><br><br>
+				<div class="g_m_g">
+					<div class="g_m_g_s"><img src="./asset/img/mouse_left.png"><br><a>Move Around</a></div>
+					<div class="g_m_g_s"><img src="./asset/img/mouse_mid.png"><br><a>Zoom In/Out</a></div>
+					<div class="g_m_g_s"><img src="./asset/img/mouse_right.png"><br><a>Move Focus</a></div>
+				</div>
+				<br>
+				<div class="g_m_g">
+						<div class="g_m_g_s"><img src="./asset/img/touch_move.png" width=40px><br><a>Move Around</a></div>
+						<div class="g_m_g_s"><img src="./asset/img/touch_zoom.png" width=40px><br><a>Zoom In/Out</a></div>
+						<div class="g_m_g_s"><img src="./asset/img/touch_archor.png" width=40px><br><a>Move Focus</a></div>
+				</div>
+				<br>
+				<div class="g_s_g">
+					<div class="g_s_g_s"><div class="green_screen"><div class="g_m_ava_text"><a>Avaliable</a></div></div></div>
+					<div class="g_s_g_s"><div class="red_screen"><div class="g_m_ava_text"><a>Unavaliable</a></div></div></div>
+				</div>
 			</div>
 			<div id="guide_close" onclick="closeGuide()"><div class="close"> </div></div>
 			<div id="guide_line"> </div>
+		</div>
+
+		<div id="advance_settings">
+			<div id="as_input">
+				<a>Active 'I AM HERE': </a> <input type="checkbox" id="as_opener"><br>
+				<a>x: </a> <input id="myLoc_x" type="number" value=""><br>
+				<a>y: </a> <input id="myLoc_y" type="number" value=""><br>
+				<a>z: </a> <input id="myLoc_z" type="number" value=""><br>
+			</div>
+			<div id="as_control">
+				<button>UP</button>
+				<button>DOWN</button>
+				<button>LEFT</button>
+				<button>RIGHT</button>
+			</div>
+
+			<div id="as_save"><button>SAVE</button></div>
 		</div>
 
 		<script src="js/jq.min.js"></script>
@@ -81,5 +116,5 @@
 		<script src="js/loaders/LoaderSupport.js"></script>
 		<script src="js/loaders/OBJLoader.js"></script>
 		<script src="js/loaders/OBJLoader2.js"></script>
-		<script src="js/main.js"></script>></script>
+		<script src="js/main.js?v=33"></script></script>
 </html>

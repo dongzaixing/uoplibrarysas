@@ -14,6 +14,8 @@ var searchRes = [];
 var r_temp_text_name = 0;
 var r_temp_line_name = 0;
 
+var obj_finish;
+
 //Close guide window in user interface
 function closeGuide(){
 	var guideWindow = document.getElementById("guide");
@@ -132,18 +134,21 @@ var OBJLoader2Example = (function () {
 	
 	//IMPORT OBJ FILE
 	OBJLoader2Example.prototype.initContent = function () {
+		
 		var modelName1 = 'libraryMainBuilding';
 		var modelName2 = 'librarySeat';
 		var modelName3 = 'libraryNearBy';
-		var modelName4 = 'libraryInner';
 		var scope = this;
+		var loadCount = 1;
 		var objLoader = new THREE.OBJLoader2();
 
 		var callbackOnLoad = function ( event ) {
 			var local = new THREE.Object3D();
+			local.name = "imported_object_" + loadCount;
 			scope.scene.add( local );
 			local.add( event.detail.loaderRootNode );
 			local.position.set( 500, 0, 2400 );
+			loadCount++;
 		};
 
 		//Load Main Library Object
@@ -154,7 +159,7 @@ var OBJLoader2Example = (function () {
 			objLoader.setDisregardNormals( false );
 
 			
-			objLoader.load( 'Project_SAS_Main.obj', callbackOnLoad, null, null, null, false );
+			objLoader.load( './models/Project_SAS_Main.obj?v=12', callbackOnLoad, null, null, null, false );
 		};
 		//Load Seat Object
 		var onLoadMtl_Seat = function ( materials ) {
@@ -162,7 +167,7 @@ var OBJLoader2Example = (function () {
 			//objLoader.setMaterials( materials );
 			objLoader.setUseIndices( true );
 			objLoader.setDisregardNormals( false );
-			objLoader.load( 'Project_SAS_Seat.obj', callbackOnLoad, null, null, null, false );
+			objLoader.load( './models/Project_SAS_Seat.obj?v=12', callbackOnLoad, null, null, null, false );
 		};
 		//Load Nearby Building
 		var onLoadMtl_NB = function ( materials ) {
@@ -170,12 +175,12 @@ var OBJLoader2Example = (function () {
 			//objLoader.setMaterials( materials );
 			objLoader.setUseIndices( true );
 			objLoader.setDisregardNormals( false );
-			objLoader.load( 'Project_SAS_NB.obj', callbackOnLoad, null, null, null, false );
+			objLoader.load( './models/Project_SAS_NB.obj?v=12', callbackOnLoad, null, null, null, false );
 		};
 
 		//Loader Controller
 		//Load Main Building Material and callback main building loadup
-		objLoader.loadMtl( './Project_SAS_Main.mtl', 'Project_SAS_Main.mtl', null, onLoadMtl_Main );
+		objLoader.loadMtl( './models/Project_SAS_Main.mtl?v=12', 'Project_SAS_Main.mtl', null, onLoadMtl_Main );
 		//Load seat and nearby building
 		onLoadMtl_Seat();
 		onLoadMtl_NB();
@@ -215,6 +220,8 @@ var OBJLoader2Example = (function () {
 		}
 
 		onLoadRoad();
+		obj_finish = 1;
+		console.log(this.scene)
 
 	};
 	
@@ -225,7 +232,7 @@ var OBJLoader2Example = (function () {
 	OBJLoader2Example.prototype.initLt = function () {
 			//get seat positions
 			$.ajax({
-					url: 'data_seat.php',
+					url: './data_seat.php',
 					type: 'POST',
 					dataType: 'json',
 					async: false,
@@ -292,7 +299,7 @@ var OBJLoader2Example = (function () {
 
 	//get local json data in debug
 	$.ajax({
-		url: './data.json',
+		url: './api/data.json',
 		dataType: 'json',
 		async: false,
 		success: function (res) {
@@ -399,6 +406,9 @@ var OBJLoader2Example = (function () {
 		}
 	}
 
+	//Main entrance indicator
+	loadText2("MAIN ENTRANCE", -800, 0, 2000, -(Math.PI / 2), 0x40e2ff);
+
 	//Load Text Function 
 	//t = text value, xyz, n = name value
 	function loadText(t,x,y,z,n) {
@@ -498,6 +508,34 @@ var OBJLoader2Example = (function () {
 		});
 	}
 
+	function loadText2(t,x,y,z,r,c){
+		that = this;
+		var loader = new THREE.FontLoader();
+		loader.load( "./asset/fonts/barlow_bold.typeface.json", function ( font ) {
+
+			var textGeo = new THREE.TextGeometry( t, {
+				font: font,
+				size: 100,
+				height: 1,
+				curveSegments: 100,
+				bevelEnabled: false
+			} );
+
+			var textMaterial = new THREE.MeshPhongMaterial( { color: c } );
+		
+			var textMesh = new THREE.Mesh( textGeo, textMaterial );
+
+			textMesh.position.x = x;
+			textMesh.position.y = y;
+			textMesh.position.z = z;
+			textMesh.rotation.x = r;
+	
+			textMesh.name = t;
+
+			that.scene.add( textMesh );
+		});
+	}
+
 
 	
 	
@@ -519,7 +557,7 @@ var OBJLoader2Example = (function () {
 
 
 					//object
-					var textGeo_findSeat = new THREE.TextGeometry( "IN HERE", {
+					var textGeo_findSeat = new THREE.TextGeometry( "HERE", {
 						font: font,
 						size: 200,
 						height: 1,
@@ -708,26 +746,30 @@ var render = function () {
 	}
 
 	//Zoom in to transparent, control zone -> cube: 6400x6400x6400
-	var tranOpTarget_Main = app.scene.getObjectById(22);
-	var tranOpTargetChildren_Main = tranOpTarget_Main.children;
-	
-	if(app.camera.position.x < 6400 
-		&& app.camera.position.x > -6400 
-		&& app.camera.position.z < 6400 
-		&& app.camera.position.z > -6400 
-		&& app.camera.position.y < 6400 
-		&& app.camera.position.y > -6400){
-		for(i=0;i<tranOpTargetChildren_Main.length;i++){
-			tranOpTarget_Main.children[i].material.opacity = 0.07;
+	if(app.scene.getObjectById(22)){
+
+		var tranOpTarget_Main = app.scene.getObjectById(22);
+		var tranOpTargetChildren_Main = tranOpTarget_Main.children;
+		
+		if(app.camera.position.x < 6400 
+			&& app.camera.position.x > -6400 
+			&& app.camera.position.z < 6400 
+			&& app.camera.position.z > -6400 
+			&& app.camera.position.y < 6400 
+			&& app.camera.position.y > -6400){
+			for(i=0;i<tranOpTargetChildren_Main.length;i++){
+				tranOpTarget_Main.children[i].material.opacity = 0.07;
+			}
+
+		}else{
+
+			for(i=0;i<tranOpTargetChildren_Main.length;i++){
+				tranOpTarget_Main.children[i].material.opacity = 0.8;
+			}
+
 		}
-
-	}else{
-
-		for(i=0;i<tranOpTargetChildren_Main.length;i++){
-			tranOpTarget_Main.children[i].material.opacity = 0.8;
-		}
-
 	}
+	
 	
 	//Disable camera move to underground
 	if(app.camera.position.y < 0){
@@ -784,7 +826,9 @@ function searchSeat(){
 		app.seatIndicator(unique(searchRes), v);
 	}else{
 		//No result
-		alert("There are no available options under selected condition. Please try to book a meeting/study room.");
+		//alert("There are no available options under selected condition. Please try to book a meeting/study room.");
+		alertPopup("Sorry, no seats available in this condition. Please try to book the meeting/study room.");
+
 	}
 	
 	//Close in 3.6s
@@ -795,6 +839,11 @@ function searchSeat(){
 		$('#searchBtn').attr('onClick', "searchSeat()");
 		app.seatIndicatorRemove();	
 	}, 3600)
+}
+
+function advance_mylocation(){
+	console.log("aaa")
+	$("#advance_settings").css("display", "block");
 }
 
 //delete repeat elements in array
@@ -810,3 +859,16 @@ function unique(array) {
 }
 
 	
+
+function alertPopup(text){
+	$("#alert").css("display", "block");
+	$("#alert").css("animation-name", "top2down");
+	$("#alert_text").text(text);
+	setTimeout(function(){
+		$("#alert").css("animation-name", "down2top");
+	}, 3600)
+
+	setTimeout(function(){
+		$("#alert").css("display", "none");
+	}, 3720)
+}

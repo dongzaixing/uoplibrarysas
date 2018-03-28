@@ -10,7 +10,7 @@
 
 
   //connect to database
-  include('./services/connect.php');
+  include('../services/connect.php');
 
 
   //query type:select, get data from database: py
